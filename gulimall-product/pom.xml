@@ -5,8 +5,8 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <version>2.3.2.RELEASE</version>
+        <relativePath   />
     </parent>
     <groupId>com.jch.gulimall</groupId>
     <artifactId>gulimall-product</artifactId>
@@ -15,9 +15,15 @@
     <description>gulimall-product</description>
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR6</spring-cloud.version>
     </properties>
     <dependencies>
+        <dependency>
+            <!-- 公共模块-->
+            <groupId>com.jch.gulimall</groupId>
+            <artifactId>gulimall-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
