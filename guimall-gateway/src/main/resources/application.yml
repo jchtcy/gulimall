@@ -12,3 +12,20 @@ spring:
           uri: https://www.qq.com
           predicates:
             - Query=url, qq
+        # 商品模块
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: admin_route
+          uri: lb://renren-fast
+          predicates:
+            - Path=/api/**  #把所有api开头的请求都转发给renren-fast
+          filters:
+            # 默认规则， 请求过来：http://localhost:88/api/captcha.jpg   转发-->  http://renren-fast:8080/api/captcha.jpg
+            # 但是真正的路径是http://renren-fast:8080/renren-fast/captcha.jpg
+            # 所以使用路径重写把/api/* 改变成 /renren-fast/*
+            - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
