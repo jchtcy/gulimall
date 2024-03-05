@@ -1,9 +1,16 @@
 package com.jch.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
+import com.jch.common.vallid.AddGroup;
+import com.jch.common.vallid.UpdateGroup;
+import com.jch.common.vallid.UpdateStatusGroup;
+import com.mysql.cj.xdevapi.UpdateSpec;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +22,7 @@ import com.jch.gulimall.product.service.BrandService;
 import com.jch.common.utils.PageUtils;
 import com.jch.common.utils.R;
 
+import javax.validation.Valid;
 
 
 /**
@@ -55,18 +63,44 @@ public class BrandController {
      * 保存
      */
     @RequestMapping("/save")
-    public R save(@RequestBody BrandEntity brand){
-		brandService.save(brand);
-
+    //@RequiresPermissions("product:brand:save")
+    public R save(@Validated({AddGroup.class}) @RequestBody BrandEntity brand){
+//    public R save(@Valid @RequestBody BrandEntity brand, BindingResult result){
+//        if (result.hasErrors()){
+//            Map<String, String> map = new HashMap<>();
+//            //1、获取校验的结果
+//            result.getFieldErrors().forEach((item)->{
+//                //获取到错误提示
+//                String message = item.getDefaultMessage();
+//                //获取到错误属性的名字
+//                String field = item.getField();
+//                map.put(field, message);
+//            });
+//            return R.error().put("data", map);
+//        }else{
+//            brandService.save(brand);
+//        }
+        brandService.save(brand);
         return R.ok();
     }
+
 
     /**
      * 修改
      */
     @RequestMapping("/update")
-    public R update(@RequestBody BrandEntity brand){
+    public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
 		brandService.updateById(brand);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改状态
+     */
+    @RequestMapping("/update/status")
+    public R updateStatus(@Validated({UpdateStatusGroup.class}) @RequestBody BrandEntity brand){
+        brandService.updateById(brand);
 
         return R.ok();
     }
