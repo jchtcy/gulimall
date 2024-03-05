@@ -28,7 +28,7 @@ export default {
       menus: [],
       expandedKey: [],
       defaultProps: {
-        children: "children",
+        children: "childrenList",
         label: "name"
       }
     };

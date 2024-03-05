@@ -2,6 +2,7 @@ package com.jch.gulimall.product.service.impl;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -87,4 +88,33 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         // 逻辑删除
         baseMapper.deleteBatchIds(list);
     }
+
+    /**
+     * 根据分类id查询完整路径
+     * @param catelogId 分类id
+     * @return
+     */
+    @Override
+    public Long[] findCatelogPath(Long catelogId) {
+        List<Long> paths = new ArrayList<>();
+        List<Long> parentPath = findParentPath(catelogId, paths);
+        return parentPath.toArray(new Long[parentPath.size()]);
+    }
+
+    /**
+     * 递归查找父节点
+     * @param catelogId
+     * @param paths
+     * @return
+     */
+    private List<Long> findParentPath(Long catelogId, List<Long> paths) {
+        CategoryEntity byId = this.getById(catelogId);
+        if (byId.getParentCid() != 0) {
+            findParentPath(byId.getParentCid(), paths);
+        }
+        paths.add(catelogId);
+        return paths;
+    }
+
+
 }
