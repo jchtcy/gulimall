@@ -70,5 +70,11 @@ public interface AttrService extends IService<AttrEntity> {
      * @return
      */
     PageUtils getNoRelationAttr(Map<String, Object> params, Long attrgroupId);
+
+    /**
+     * 删除属性表、属性和属性分类关联表
+     * @param attrIdList
+     */
+    void removeDetailsByIds(List<Long> attrIdList);
 }
 

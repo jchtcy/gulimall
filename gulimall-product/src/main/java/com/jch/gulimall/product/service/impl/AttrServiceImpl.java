@@ -183,7 +183,7 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         this.updateById(attrEntity);
 
         if (attr.getAttrGroupId() != null) { // 不等于空再去更新或者新增
-            // 更新属性和属性分类关联表
+            // 更新属性、属性和属性分类关联表
             AttrAttrgroupRelationEntity attrAttrgroupRelationEntity = new AttrAttrgroupRelationEntity();
             attrAttrgroupRelationEntity.setAttrId(attr.getAttrId());
             attrAttrgroupRelationEntity.setAttrGroupId(attr.getAttrGroupId());
@@ -289,5 +289,22 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
         }
         IPage<AttrEntity> page = this.page(new Query<AttrEntity>().getPage(params), queryWrapper);
         return new PageUtils(page);
+    }
+
+    /**
+     * 删除属性表、属性和属性分类关联表
+     * @param attrIdList
+     */
+    @Transactional
+    @Override
+    public void removeDetailsByIds(List<Long> attrIdList) {
+        // 删除属性表
+        this.baseMapper.deleteBatchIds(attrIdList);
+
+        // 删除属性和属性分类关联表
+        attrAttrgroupRelationDao.delete(
+                new QueryWrapper<AttrAttrgroupRelationEntity>()
+                        .in("attr_id", attrIdList)
+        );
     }
 }

@@ -74,11 +74,11 @@ public class AttrController {
     }
 
     /**
-     * 删除
+     * 删除属性表、属性和属性分类关联表
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] attrIds){
-		attrService.removeByIds(Arrays.asList(attrIds));
+		attrService.removeDetailsByIds(Arrays.asList(attrIds));
 
         return R.ok();
     }
