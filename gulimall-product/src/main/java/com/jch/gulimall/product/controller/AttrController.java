@@ -74,7 +74,7 @@ public class AttrController {
     }
 
     /**
-     * 删除属性表、属性和属性分类关联表
+     * 删除属性
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] attrIds){

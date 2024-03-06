@@ -1,6 +1,11 @@
 package com.jch.gulimall.product.service.impl;
 
+import com.jch.gulimall.product.dao.AttrAttrgroupRelationDao;
+import com.jch.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -11,11 +16,15 @@ import com.jch.common.utils.Query;
 import com.jch.gulimall.product.dao.AttrGroupDao;
 import com.jch.gulimall.product.entity.AttrGroupEntity;
 import com.jch.gulimall.product.service.AttrGroupService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 
 @Service("attrGroupService")
 public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEntity> implements AttrGroupService {
+
+    @Autowired
+    private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -53,5 +62,22 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
                     wrapper);
             return new PageUtils(page);
         }
+    }
+
+    /**
+     * 删除属性分类表时, 删除属性分类和属性关联表
+     * @param attrGroupList
+     */
+    @Transactional
+    @Override
+    public void removeDetailsByIds(List<Long> attrGroupList) {
+        // 删除属性分类表
+        this.baseMapper.deleteBatchIds(attrGroupList);
+
+        // 删除属性和属性分类关联表
+        attrAttrgroupRelationDao.delete(
+                new QueryWrapper<AttrAttrgroupRelationEntity>()
+                        .in("attr_group_id", attrGroupList)
+        );
     }
 }

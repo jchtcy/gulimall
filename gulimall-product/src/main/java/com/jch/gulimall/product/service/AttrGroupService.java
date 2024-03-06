@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jch.common.utils.PageUtils;
 import com.jch.gulimall.product.entity.AttrGroupEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,5 +25,11 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @return
      */
     PageUtils queryPage(Map<String, Object> params, Long catelogId);
+
+    /**
+     * 删除属性分类表时, 删除属性分类和属性关联表
+     * @param attrGroupList
+     */
+    void removeDetailsByIds(List<Long> attrGroupList);
 }
 

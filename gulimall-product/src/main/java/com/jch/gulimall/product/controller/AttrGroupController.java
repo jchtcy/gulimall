@@ -90,11 +90,11 @@ public class AttrGroupController {
     }
 
     /**
-     * 删除
+     * 删除属性分类
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] attrGroupIds){
-		attrGroupService.removeByIds(Arrays.asList(attrGroupIds));
+		attrGroupService.removeDetailsByIds(Arrays.asList(attrGroupIds));
 
         return R.ok();
     }
