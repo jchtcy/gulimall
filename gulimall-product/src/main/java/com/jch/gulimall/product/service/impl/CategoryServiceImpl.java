@@ -1,5 +1,7 @@
 package com.jch.gulimall.product.service.impl;
 
+import com.jch.gulimall.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,10 +18,14 @@ import com.jch.common.utils.Query;
 import com.jch.gulimall.product.dao.CategoryDao;
 import com.jch.gulimall.product.entity.CategoryEntity;
 import com.jch.gulimall.product.service.CategoryService;
+import org.springframework.util.StringUtils;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
+
+    @Autowired
+    private CategoryBrandRelationService categoryBrandRelationService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -116,5 +122,15 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         return paths;
     }
 
-
+    /**
+     * 修改分类表和品牌分类关联表
+     * @param category
+     */
+    @Override
+    public void updateDetail(CategoryEntity category) {
+        this.updateById(category);
+        if (!StringUtils.isEmpty(category.getName())) {
+            categoryBrandRelationService.updateCategory(category);
+        }
+    }
 }
