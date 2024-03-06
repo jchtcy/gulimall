@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * 商品属性
- * 
+ *
  * @author jch
  * @email jch@gulimall.com
  * @date 2024-02-28 13:17:59
@@ -36,6 +36,13 @@ public class AttrEntity implements Serializable {
 	 * 属性图标
 	 */
 	private String icon;
+
+	/**
+	 * 值类型
+	 */
+	private Integer valueType;
+
+
 	/**
 	 * 可选值列表[用逗号分隔]
 	 */

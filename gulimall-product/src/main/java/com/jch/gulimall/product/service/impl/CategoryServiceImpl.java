@@ -18,6 +18,7 @@ import com.jch.common.utils.Query;
 import com.jch.gulimall.product.dao.CategoryDao;
 import com.jch.gulimall.product.entity.CategoryEntity;
 import com.jch.gulimall.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 
@@ -126,6 +127,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      * 修改分类表和品牌分类关联表
      * @param category
      */
+    @Transactional
     @Override
     public void updateDetail(CategoryEntity category) {
         this.updateById(category);

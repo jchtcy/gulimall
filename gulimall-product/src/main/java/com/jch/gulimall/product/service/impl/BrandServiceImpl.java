@@ -13,6 +13,7 @@ import com.jch.common.utils.Query;
 import com.jch.gulimall.product.dao.BrandDao;
 import com.jch.gulimall.product.entity.BrandEntity;
 import com.jch.gulimall.product.service.BrandService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 
@@ -42,6 +43,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandDao, BrandEntity> impleme
      * 修改品牌表和品牌分类关联表
      * @param brand
      */
+    @Transactional
     @Override
     public void updateDetail(BrandEntity brand) {
         this.updateById(brand);
