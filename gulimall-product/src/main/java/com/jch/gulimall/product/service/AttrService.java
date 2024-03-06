@@ -3,9 +3,11 @@ package com.jch.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jch.common.utils.PageUtils;
 import com.jch.gulimall.product.entity.AttrEntity;
+import com.jch.gulimall.product.vo.AttrGroupRelationVo;
 import com.jch.gulimall.product.vo.AttrRespVo;
 import com.jch.gulimall.product.vo.AttrVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,5 +49,26 @@ public interface AttrService extends IService<AttrEntity> {
      * @param attr
      */
     void updateAttr(AttrVo attr);
+
+    /**
+     * 获取属性分组的关联的所有属性
+     * @param attrgroupId
+     * @return
+     */
+    List<AttrEntity> getRelationAttr(Long attrgroupId);
+
+    /**
+     * 删除属性与分组的关联关系
+     * @param attrGroupRelationVos
+     */
+    void deleteAttrRelation(AttrGroupRelationVo[] attrGroupRelationVos);
+
+    /**
+     * 获取属性分组没有关联的其他属性
+     * @param params
+     * @param attrgroupId
+     * @return
+     */
+    PageUtils getNoRelationAttr(Map<String, Object> params, Long attrgroupId);
 }
 
