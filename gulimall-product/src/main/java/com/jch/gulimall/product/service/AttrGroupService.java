@@ -3,6 +3,7 @@ package com.jch.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jch.common.utils.PageUtils;
 import com.jch.gulimall.product.entity.AttrGroupEntity;
+import com.jch.gulimall.product.vo.AttrGroupWithAttrsVo;
 
 import java.util.List;
 import java.util.Map;
@@ -31,5 +32,12 @@ public interface AttrGroupService extends IService<AttrGroupEntity> {
      * @param attrGroupList
      */
     void removeDetailsByIds(List<Long> attrGroupList);
+
+    /**
+     * 获取分类下所有分组&关联属性
+     * @param catelogId
+     * @return
+     */
+    List<AttrGroupWithAttrsVo> getAttrGroupWithAttrListByCatelogId(Long catelogId);
 }
 

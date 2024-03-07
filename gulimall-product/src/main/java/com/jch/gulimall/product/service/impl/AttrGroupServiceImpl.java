@@ -2,11 +2,17 @@ package com.jch.gulimall.product.service.impl;
 
 import com.jch.gulimall.product.dao.AttrAttrgroupRelationDao;
 import com.jch.gulimall.product.entity.AttrAttrgroupRelationEntity;
+import com.jch.gulimall.product.entity.AttrEntity;
+import com.jch.gulimall.product.service.AttrService;
+import com.jch.gulimall.product.vo.AttrGroupWithAttrsVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,6 +31,9 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
 
     @Autowired
     private AttrAttrgroupRelationDao attrAttrgroupRelationDao;
+
+    @Autowired
+    private AttrService attrService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -79,5 +88,31 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
                 new QueryWrapper<AttrAttrgroupRelationEntity>()
                         .in("attr_group_id", attrGroupList)
         );
+    }
+
+    /**
+     * 获取分类下所有分组&关联属性
+     * @param catelogId
+     * @return
+     */
+    @Override
+    public List<AttrGroupWithAttrsVo> getAttrGroupWithAttrListByCatelogId(Long catelogId) {
+        //查出当前分类下的所有属性分组
+        List<AttrGroupEntity> attrGroupEntityList = this.baseMapper.selectList(
+                new QueryWrapper<AttrGroupEntity>()
+                        .eq("catelog_id", catelogId)
+        );
+        List<AttrGroupWithAttrsVo> attrGroupWithAttrsVoList = attrGroupEntityList.stream()
+                .map(attrGroupEntity -> {
+                    AttrGroupWithAttrsVo attrGroupWithAttrsVo = new AttrGroupWithAttrsVo();
+                    BeanUtils.copyProperties(attrGroupEntity, attrGroupWithAttrsVo);
+                    //查出该属性分组的所有属性
+                    List<AttrEntity> attrs = attrService.getRelationAttr(attrGroupEntity.getAttrGroupId());
+                    attrGroupWithAttrsVo.setAttrs(attrs);
+                    return attrGroupWithAttrsVo;
+                })
+                .collect(Collectors.toList());
+
+        return attrGroupWithAttrsVoList;
     }
 }

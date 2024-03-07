@@ -6,6 +6,7 @@ import com.jch.gulimall.product.entity.BrandEntity;
 import com.jch.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.jch.gulimall.product.entity.CategoryEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,5 +37,12 @@ public interface CategoryBrandRelationService extends IService<CategoryBrandRela
      * @param category
      */
     void updateCategory(CategoryEntity category);
+
+    /**
+     * 根据分类id获取该分类下的所有品牌
+     * @param catId
+     * @return
+     */
+    List<BrandEntity> getBrandListByCatId(Long catId);
 }
 

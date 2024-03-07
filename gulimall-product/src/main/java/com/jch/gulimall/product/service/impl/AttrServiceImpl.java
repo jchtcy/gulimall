@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import com.jch.gulimall.product.dao.AttrDao;
 import com.jch.gulimall.product.entity.AttrEntity;
 import com.jch.gulimall.product.service.AttrService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 
@@ -223,6 +225,9 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                 .map(AttrAttrgroupRelationEntity::getAttrId)
                 .collect(Collectors.toList());
         // 通过属性id查询属性
+        if (CollectionUtils.isEmpty(attrIdList)) {
+            return new ArrayList<>();
+        }
         List<AttrEntity> attrEntityList = this.baseMapper.selectBatchIds(attrIdList);
         return attrEntityList;
     }
