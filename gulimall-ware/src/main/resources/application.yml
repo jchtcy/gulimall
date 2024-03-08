@@ -4,6 +4,15 @@ spring:
     password: root
     url: jdbc:mysql://192.168.48.129:3306/gulimall_wms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: gulimall-ware
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
 
 # MapperScan
 # sql映射文件位置
@@ -15,3 +24,7 @@ mybatis-plus:
 
 server:
   port: 11000
+
+logging:
+  level:
+    com.jch: debug
