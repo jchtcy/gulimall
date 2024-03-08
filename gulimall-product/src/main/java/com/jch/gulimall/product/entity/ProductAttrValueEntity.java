@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * spu属性值
- * 
+ *
  * @author jch
  * @email jch@gulimall.com
  * @date 2024-02-28 13:17:59
