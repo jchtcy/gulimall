@@ -1,4 +1,5 @@
 # 一、项目介绍
+todo k8s(p340)之后的内容暂时没做
 gulimall（谷粒商城） 项目是一套电商项目，包括前台商城系统以及后台管理系统，基于 SpringCloud + SpringCloudAlibaba + MyBatis-Plus实现，采用 Docker 容器化部署。前台商城系统包括：用户登录、注册、商品搜索、商品详情、购物车、下订单流程、秒杀活动等模块。后台管理系统包括：系统管理、商品系统、优惠营销、库存系统、订单系统、用户系统、内容管理等七大模块。
 # 二、组织结构
 ```
@@ -41,9 +42,9 @@ gulimall
 |  node.js  | 服务端的js |   https://nodejs.org/en   |
 # 四、架构图
 ## 1、系统架构图
-![本地路径](resource/img/系统架构图.PNG)
+![本地路径](resource/img/note/系统架构图.PNG)
 ## 2、业务架构图
-![本地路径](resource/img/业务架构图.PNG)
+![本地路径](resource/img/note/业务架构图.PNG)
 # 五、环境搭建
 ## 1、开发工具
 |     工具      |        说明         |                      官网                       |
