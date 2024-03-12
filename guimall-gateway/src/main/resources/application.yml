@@ -50,3 +50,9 @@ spring:
             # 但是真正的路径是http://renren-fast:8080/renren-fast/captcha.jpg
             # 所以使用路径重写把/api/* 改变成 /renren-fast/*
             - RewritePath=/api/(?<segment>.*),/renren-fast/$\{segment}
+
+        - id: gulimall_host_route
+          uri: lb://gulimall-product
+          predicates:
+            - Host=**.gulimall.com
+
