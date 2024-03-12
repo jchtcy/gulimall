@@ -76,5 +76,12 @@ public interface AttrService extends IService<AttrEntity> {
      * @param attrIdList
      */
     void removeDetailsByIds(List<Long> attrIdList);
+
+    /**
+     * 在指定的属性集合里查询出所有可被检索的属性
+     * @param attrIds
+     * @return
+     */
+    List<Long> selectSearchAttrIds(List<Long> attrIds);
 }
 

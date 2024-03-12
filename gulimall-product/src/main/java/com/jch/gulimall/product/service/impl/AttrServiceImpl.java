@@ -312,4 +312,14 @@ public class AttrServiceImpl extends ServiceImpl<AttrDao, AttrEntity> implements
                         .in("attr_id", attrIdList)
         );
     }
+
+    /**
+     * 在指定的属性集合里查询出所有可被检索的属性
+     * @param attrIds
+     * @return
+     */
+    @Override
+    public List<Long> selectSearchAttrIds(List<Long> attrIds) {
+        return this.baseMapper.selectSearchAttrIds(attrIds);
+    }
 }
