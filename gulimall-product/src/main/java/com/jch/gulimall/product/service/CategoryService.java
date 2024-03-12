@@ -3,6 +3,7 @@ package com.jch.gulimall.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jch.common.utils.PageUtils;
 import com.jch.gulimall.product.entity.CategoryEntity;
+import com.jch.gulimall.product.vo.Catelog2Vo;
 
 import java.util.List;
 import java.util.Map;
@@ -42,5 +43,17 @@ public interface CategoryService extends IService<CategoryEntity> {
      * @param category
      */
     void updateDetail(CategoryEntity category);
+
+    /**
+     * 查出所有1级分类
+     * @return
+     */
+    List<CategoryEntity> getLevelOneCateGoryList();
+
+    /**
+     * 三级分类菜单
+     * @return
+     */
+    Map<String, List<Catelog2Vo>> getCatalogJson();
 }
 

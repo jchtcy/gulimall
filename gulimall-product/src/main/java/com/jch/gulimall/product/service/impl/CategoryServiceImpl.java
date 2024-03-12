@@ -1,6 +1,7 @@
 package com.jch.gulimall.product.service.impl;
 
 import com.jch.gulimall.product.service.CategoryBrandRelationService;
+import com.jch.gulimall.product.vo.Catelog2Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 查出所有分类以及子分类, 以树形结构组装
+     *
      * @return
      */
     @Override
@@ -65,8 +67,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 递归查找所有菜单的子菜单
+     *
      * @param root 当前菜单
-     * @param all 所有菜单
+     * @param all  所有菜单
      * @return
      */
     private List<CategoryEntity> getChildrenList(CategoryEntity root, List<CategoryEntity> all) {
@@ -86,6 +89,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 删除（逻辑删除）
+     *
      * @param list
      */
     @Override
@@ -98,6 +102,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 根据分类id查询完整路径
+     *
      * @param catelogId 分类id
      * @return
      */
@@ -110,6 +115,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 递归查找父节点
+     *
      * @param catelogId
      * @param paths
      * @return
@@ -125,6 +131,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
 
     /**
      * 修改分类表和品牌分类关联表
+     *
      * @param category
      */
     @Transactional
@@ -134,5 +141,55 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         if (!StringUtils.isEmpty(category.getName())) {
             categoryBrandRelationService.updateCategory(category);
         }
+    }
+
+    /**
+     * 查出所有1级分类
+     *
+     * @return
+     */
+    @Override
+    public List<CategoryEntity> getLevelOneCateGoryList() {
+        return this.baseMapper.selectList(
+                new QueryWrapper<CategoryEntity>()
+                        .eq("parent_cid", 0)
+        );
+    }
+
+    /**
+     * 三级分类菜单
+     *
+     * @return
+     */
+    @Override
+    public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        // 查询所有一级分类
+        List<CategoryEntity> levelOneList = this.getLevelOneCateGoryList();
+        // 封装一级分类数据
+        Map<String, List<Catelog2Vo>> levelOneMap = levelOneList.stream().collect(Collectors.toMap(
+                k -> k.getCatId().toString(),
+                v -> {
+                    // 查询每一个一级分类的二级分类
+                    List<CategoryEntity> levelTwoList = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+                    // 封装二级分类数据
+                    List<Catelog2Vo> levelTwoCateGoryList = null;
+                    if (levelTwoList != null) {
+                        levelTwoCateGoryList = levelTwoList.stream().map(item -> {
+                            Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, item.getCatId().toString(), item.getName());
+                            List<CategoryEntity> levelThreeList = this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+                            if (levelThreeList != null) {
+                                List<Catelog2Vo.Catelog3Vo> levelThreeCateGoryList = levelThreeList.stream().map(levelThree -> {
+                                    Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(item.getCatId().toString(), levelThree.getCatId().toString(), levelThree.getName());
+                                    return catelog3Vo;
+                                }).collect(Collectors.toList());
+                                catelog2Vo.setCatalog3List(levelThreeCateGoryList);
+                            }
+                            return catelog2Vo;
+                        }).collect(Collectors.toList());
+                    }
+                    return levelTwoCateGoryList;
+                }
+        ));
+        return levelOneMap;
     }
 }
