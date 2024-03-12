@@ -27,7 +27,7 @@ vi nginx.conf
 http {
     ...
     upstream gulimall{
-      server 192.168.3.16:88;
+      server 本机ip:88;
     }
     include /etc/nginx/conf.d/*.conf;
 }
