@@ -13,7 +13,7 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
-    cache: false
+    cache: true
 
 
 # MapperScan
@@ -31,4 +31,4 @@ server:
 
 logging:
   level:
-    com.jch.gulimall.product: debug
+    com.jch.gulimall.product: error

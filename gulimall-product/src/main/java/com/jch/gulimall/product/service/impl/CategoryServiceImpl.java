@@ -163,23 +163,25 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
      */
     @Override
     public Map<String, List<Catelog2Vo>> getCatalogJson() {
+        // 将数据库多次查询变为一次
+        List<CategoryEntity> selectList = this.baseMapper.selectList(null);
         // 查询所有一级分类
-        List<CategoryEntity> levelOneList = this.getLevelOneCateGoryList();
+        List<CategoryEntity> levelOneList = getParentCid(selectList, 0L);
         // 封装一级分类数据
         Map<String, List<Catelog2Vo>> levelOneMap = levelOneList.stream().collect(Collectors.toMap(
                 k -> k.getCatId().toString(),
                 v -> {
                     // 查询每一个一级分类的二级分类
-                    List<CategoryEntity> levelTwoList = baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", v.getCatId()));
+                    List<CategoryEntity> levelTwoList = getParentCid(selectList, v.getCatId());
                     // 封装二级分类数据
                     List<Catelog2Vo> levelTwoCateGoryList = null;
                     if (levelTwoList != null) {
-                        levelTwoCateGoryList = levelTwoList.stream().map(item -> {
-                            Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, item.getCatId().toString(), item.getName());
-                            List<CategoryEntity> levelThreeList = this.baseMapper.selectList(new QueryWrapper<CategoryEntity>().eq("parent_cid", item.getCatId()));
+                        levelTwoCateGoryList = levelTwoList.stream().map(l2 -> {
+                            Catelog2Vo catelog2Vo = new Catelog2Vo(v.getCatId().toString(), null, l2.getCatId().toString(), l2.getName());
+                            List<CategoryEntity> levelThreeList = getParentCid(selectList, l2.getCatId());
                             if (levelThreeList != null) {
                                 List<Catelog2Vo.Catelog3Vo> levelThreeCateGoryList = levelThreeList.stream().map(levelThree -> {
-                                    Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(item.getCatId().toString(), levelThree.getCatId().toString(), levelThree.getName());
+                                    Catelog2Vo.Catelog3Vo catelog3Vo = new Catelog2Vo.Catelog3Vo(l2.getCatId().toString(), levelThree.getCatId().toString(), levelThree.getName());
                                     return catelog3Vo;
                                 }).collect(Collectors.toList());
                                 catelog2Vo.setCatalog3List(levelThreeCateGoryList);
@@ -191,5 +193,10 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
                 }
         ));
         return levelOneMap;
+    }
+
+    private List<CategoryEntity> getParentCid(List<CategoryEntity> selectList, Long parentCid) {
+        List<CategoryEntity> collect = selectList.stream().filter(c -> c.getParentCid().equals(parentCid)).collect(Collectors.toList());
+        return collect;
     }
 }
