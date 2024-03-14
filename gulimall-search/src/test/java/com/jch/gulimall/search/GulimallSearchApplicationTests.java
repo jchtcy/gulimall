@@ -1,6 +1,5 @@
 package com.jch.gulimall.search;
 
-
 import com.alibaba.fastjson.JSON;
 import com.jch.gulimall.search.config.GulimallElasticSearchConfig;
 import lombok.Data;
@@ -27,8 +26,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.naming.directory.SearchResult;
 import java.io.IOException;
 
 @RunWith(SpringRunner.class)
