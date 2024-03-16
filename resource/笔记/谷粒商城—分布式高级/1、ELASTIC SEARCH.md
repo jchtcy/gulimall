@@ -36,13 +36,11 @@
 ````
 1、检索红海特工行动
 查出后计算相关性得分: 3号记录命中了2次,且3号本身才有3个单词,2/3,所以3号最匹配
-
-2、
 ````
 # 二、docker安装
 ## 1、下载镜像
 ````
-elasticsearch: 存储河检索数据
+elasticsearch: 存储可检索数据
 kibana: 可视化检索数据
 
 docker pull elasticsearch:7.4.2
