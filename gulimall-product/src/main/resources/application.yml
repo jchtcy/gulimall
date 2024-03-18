@@ -43,3 +43,10 @@ server:
 logging:
   level:
     com.jch.gulimall.product: error
+
+# 线程池配置
+gulimall:
+  thread:
+    core-size: 20
+    maximum-pool-size: 200
+    keep-alive-time: 10
