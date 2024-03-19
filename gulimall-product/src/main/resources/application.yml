@@ -25,7 +25,9 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
     cache: true
-
+  session:
+    store-type: redis
+    timeout: 30m
 
 # MapperScan
 # sql映射文件位置

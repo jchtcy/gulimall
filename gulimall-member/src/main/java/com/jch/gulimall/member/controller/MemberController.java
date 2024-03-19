@@ -3,13 +3,14 @@ package com.jch.gulimall.member.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.jch.common.exception.BizCodeEnum;
+import com.jch.gulimall.member.exception.EmailExistException;
+import com.jch.gulimall.member.exception.UsernameExistException;
 import com.jch.gulimall.member.feign.CouponFeignService;
+import com.jch.gulimall.member.vo.MemberLoginVo;
+import com.jch.gulimall.member.vo.MemberRegistVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jch.gulimall.member.entity.MemberEntity;
 import com.jch.gulimall.member.service.MemberService;
@@ -92,6 +93,37 @@ public class MemberController {
 		memberService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    /**
+     * 注册进会员
+     * @param vo
+     * @return
+     */
+    @PostMapping("/register")
+    public R regist(@RequestBody MemberRegistVo vo) {
+        try {
+            memberService.regist(vo);
+        } catch (EmailExistException e) {
+            return R.error(BizCodeEnum.EMAIL_EXIST_EXCEPTION.getCode(), BizCodeEnum.EMAIL_EXIST_EXCEPTION.getMsg());
+        } catch (UsernameExistException e) {
+            return R.error(BizCodeEnum.USER_EXIST_EXCEPTION.getCode(), BizCodeEnum.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
+
+    /**
+     * 会员登录
+     * @param vo
+     * @return
+     */
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo) {
+        MemberEntity memberEntity = memberService.login(vo);
+        if (memberEntity != null) {
+            return R.ok().put("data", memberEntity);
+        }
+        return R.error(BizCodeEnum.LOGINACCT_PASWORD_EXCEPTION.getCode(), BizCodeEnum.LOGINACCT_PASWORD_EXCEPTION.getMsg());
     }
 
 }
