@@ -21,6 +21,11 @@ public class SkuItemVo {
     // 5、获取spu规格参数信息
     List<SpuItemGroupAttrVo> groupAttrs;
 
+
+    private boolean hasStock = true;// 是否有货
+    // 6、秒杀
+    private String seckillSku;
+
     @Data
     public static class SkuItemSaleAttrVo{
         private Long attrId;
