@@ -1,14 +1,11 @@
 package com.jch.gulimall.product.app;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jch.gulimall.product.entity.SkuInfoEntity;
 import com.jch.gulimall.product.service.SkuInfoService;
@@ -81,4 +78,12 @@ public class SkuInfoController {
         return R.ok();
     }
 
+    /**
+     * 获取指定商品的价格
+     */
+    @GetMapping("/{skuId}/price")
+    public R getPrice(@PathVariable("skuId") Long skuId) {
+        SkuInfoEntity skuInfo = skuInfoService.getById(skuId);
+        return R.ok().put("price", skuInfo.getPrice());
+    }
 }

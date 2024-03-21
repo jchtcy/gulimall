@@ -4,6 +4,25 @@ spring:
     password: root
     url: jdbc:mysql://192.168.48.129:3306/gulimall_oms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: gulimall-order
+  thymeleaf:
+    cache: false
+  redis:
+    host: 192.168.48.129
+  session:
+    store-type: redis
+
+
+gulimall:
+  thread:
+    core-size: 20
+    maximum-pool-size: 200
+    keep-alive-time: 10
 
 # MapperScan
 # sql映射文件位置

@@ -1,17 +1,15 @@
 package com.jch.gulimall.ware.controller;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jch.gulimall.ware.entity.WareSkuEntity;
+import com.jch.gulimall.ware.vo.FareVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jch.gulimall.ware.entity.WareInfoEntity;
 import com.jch.gulimall.ware.service.WareInfoService;
@@ -84,4 +82,14 @@ public class WareInfoController {
         return R.ok();
     }
 
+    /**
+     * 根据用户的收获地址计算运费
+     * @param addrId
+     * @return
+     */
+    @GetMapping("/fare")
+    public R getFare(@RequestParam("addrId") Long addrId) {
+        FareVO fare = wareInfoService.getFare(addrId);
+        return R.ok().setData(fare);
+    }
 }
