@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jch.gulimall.order.entity.OrderEntity;
 import com.jch.gulimall.order.service.OrderService;
@@ -81,4 +77,15 @@ public class OrderController {
         return R.ok();
     }
 
+    /**
+     * 根据订单号获取订单状态
+     * @param orderSn
+     * @return
+     */
+    @GetMapping("/status/{orderSn}")
+    public R getOrderStatus(@PathVariable("orderSn") String orderSn) {
+        OrderEntity order = orderService.getOrderStatus(orderSn);
+
+        return R.ok().setData(order);
+    }
 }

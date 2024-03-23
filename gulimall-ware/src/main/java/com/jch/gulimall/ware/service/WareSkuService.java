@@ -1,9 +1,12 @@
 package com.jch.gulimall.ware.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jch.common.to.mq.OrderTo;
+import com.jch.common.to.mq.StockLockedTo;
 import com.jch.common.utils.PageUtils;
 import com.jch.gulimall.ware.entity.WareSkuEntity;
 import com.jch.gulimall.ware.vo.SkuHasStockVo;
+import com.jch.gulimall.ware.vo.WareSkuLockVo;
 
 import java.util.List;
 import java.util.Map;
@@ -33,5 +36,25 @@ public interface WareSkuService extends IService<WareSkuEntity> {
      * @return
      */
     List<SkuHasStockVo> getSkusHasStock(List<Long> skuIds);
+
+    /**
+     * 锁定库存
+     *
+     * @param wareSkuLockVo
+     * @return
+     */
+    boolean orderLockStock(WareSkuLockVo wareSkuLockVo);
+
+    /**
+     * 解锁库存
+     * @param stockLockedTo
+     */
+    void unlockStock(StockLockedTo stockLockedTo);
+
+    /**
+     * 订单服务卡顿时, 导致状态未修改, 库存解锁不了
+     * @param orderTo
+     */
+    void unlockStock(OrderTo orderTo);
 }
 
