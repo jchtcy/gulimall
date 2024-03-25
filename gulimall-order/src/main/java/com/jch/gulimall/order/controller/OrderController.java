@@ -3,6 +3,7 @@ package com.jch.gulimall.order.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import com.jch.common.utils.R;
  * @email jch@gulimall.com
  * @date 2024-02-28 16:15:49
  */
+@Slf4j
 @RestController
 @RequestMapping("order/order")
 public class OrderController {
@@ -85,7 +87,6 @@ public class OrderController {
     @GetMapping("/status/{orderSn}")
     public R getOrderStatus(@PathVariable("orderSn") String orderSn) {
         OrderEntity order = orderService.getOrderStatus(orderSn);
-
-        return R.ok().setData(order);
+        return R.ok().put("order", order);
     }
 }

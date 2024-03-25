@@ -249,9 +249,9 @@ public class WareSkuServiceImpl extends ServiceImpl<WareSkuDao, WareSkuEntity> i
             R orderR = orderFeignService.getOrderStatus(orderSn);
             if (orderR.getCode() == 0) {
                 // 订单数据返回成功
-                OrderVo orderVo = orderR.getData(new TypeReference<OrderVo>() {
+                OrderVo orderVo = orderR.getData("order", new TypeReference<OrderVo>() {
                 });
-                if (orderVo == null || orderVo.getStatus() == OrderStatusConstant.OrderStatusEnum.CANCLED.getCode() || detail.getLockStatus() == 1) {
+                if ((orderVo == null || orderVo.getStatus() == OrderStatusConstant.OrderStatusEnum.CANCLED.getCode()) && detail.getLockStatus() == 1) {
                     // 订单回滚或订单取消或已被回滚, 解锁库存
                     unLockStock(detail.getSkuId(), detail.getWareId(), detail.getSkuNum(), detailId);
                 }

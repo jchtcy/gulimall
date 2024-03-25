@@ -1,24 +1,18 @@
 package com.jch.gulimall.ware.listener;
 
-import com.alibaba.fastjson.TypeReference;
-import com.jch.common.enume.OrderStatusConstant;
 import com.jch.common.to.mq.OrderTo;
-import com.jch.common.to.mq.StockDetailTo;
 import com.jch.common.to.mq.StockLockedTo;
-import com.jch.common.utils.R;
-import com.jch.gulimall.ware.entity.WareOrderTaskDetailEntity;
-import com.jch.gulimall.ware.entity.WareOrderTaskEntity;
 import com.jch.gulimall.ware.service.WareSkuService;
-import com.jch.gulimall.ware.vo.OrderVo;
 import com.rabbitmq.client.Channel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 
+@Slf4j
 @Service
 @RabbitListener(queues = "stock.release.stock.queque")
 public class StockReleaseListener {
@@ -33,6 +27,7 @@ public class StockReleaseListener {
             wareSkuService.unlockStock(stockLockedTo);
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (Exception e) {
+            log.error("解锁库存报错" + e.getMessage());
             channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
         }
     }
