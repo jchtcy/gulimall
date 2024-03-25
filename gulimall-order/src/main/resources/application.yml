@@ -32,6 +32,9 @@ spring:
     listener:
       simple:
         acknowledge-mode: manual
+  mvc:
+    format:
+      date: yyyy-MM-dd HH:mm:ss
 
 #seata:
 #  tx-service-group: mygroup # 事务分组名称，要和服务端对应

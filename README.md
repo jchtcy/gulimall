@@ -88,7 +88,7 @@ gulimall
 ```
 1、在nginx.conf中添加负载均衡的配置    
 upstream gulimall {
-        server 192.168.43.182:88;
+        server 192.168.48.129:88;
     }
 2、在gulimall.conf中添加如下配置
 server {

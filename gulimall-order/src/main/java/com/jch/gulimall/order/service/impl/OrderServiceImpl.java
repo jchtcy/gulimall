@@ -7,14 +7,18 @@ import com.jch.common.exception.NoStockException;
 import com.jch.common.to.mq.OrderTo;
 import com.jch.common.utils.R;
 import com.jch.common.vo.auth.MemberResponseVO;
+import com.jch.common.vo.order.PayAsyncVO;
+import com.jch.common.vo.order.PayVO;
 import com.jch.gulimall.order.entity.OrderItemEntity;
 import com.jch.common.enume.OrderStatusConstant;
+import com.jch.gulimall.order.entity.PaymentInfoEntity;
 import com.jch.gulimall.order.feign.CartFeignService;
 import com.jch.gulimall.order.feign.MemberFeignService;
 import com.jch.gulimall.order.feign.ProductFeignService;
 import com.jch.gulimall.order.feign.WareFeignService;
 import com.jch.gulimall.order.interceptor.LoginUserInterceptor;
 import com.jch.gulimall.order.service.OrderItemService;
+import com.jch.gulimall.order.service.PaymentInfoService;
 import com.jch.gulimall.order.vo.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
@@ -68,6 +72,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    PaymentInfoService paymentInfoService;
 
     private ThreadLocal<OrderSubmitVo> confirmVoThreadLocal = new ThreadLocal<>();
 
@@ -409,5 +416,82 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             BeanUtils.copyProperties(order, orderTo);
             rabbitTemplate.convertAndSend("order-event-exchange", "order.release.other", orderTo);
         }
+    }
+
+    /**
+     * 根据订单编号获取支付所需要的信息
+     * @param orderSn
+     * @return
+     */
+    @Override
+    public PayVO getOrderPayInfo(String orderSn) {
+        OrderEntity order = getOrderStatus(orderSn);
+        PayVO payVO = new PayVO();
+        payVO.setOutTradeNo(orderSn);
+        payVO.setTotalAmount(order.getPayAmount().setScale(2,BigDecimal.ROUND_UP).toString());
+
+        //查询订单项的数据
+        List<OrderItemEntity> orderItemInfo = orderItemService.list(
+                new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        OrderItemEntity orderItemEntity = orderItemInfo.get(0);
+        payVO.setBody(orderItemEntity.getSkuAttrsVals());
+        payVO.setSubject(orderItemEntity.getSkuName());
+
+        return payVO;
+    }
+
+    /**
+     * 查询当前用户所有订单数据
+     * @param params
+     * @return
+     */
+    @Override
+    public PageUtils queryPageWithItem(Map<String, Object> params) {
+
+        MemberResponseVO memberResponseVO = LoginUserInterceptor.loginUser.get();
+
+        IPage<OrderEntity> page = this.page(
+                new Query<OrderEntity>().getPage(params),
+                new QueryWrapper<OrderEntity>()
+                        .eq("member_id",memberResponseVO.getId()).orderByDesc("create_time")
+        );
+
+        //遍历所有订单集合
+        List<OrderEntity> orderEntityList = page.getRecords().stream().map(order -> {
+            //根据订单号查询订单项里的数据
+            List<OrderItemEntity> orderItemEntities = orderItemService.list(new QueryWrapper<OrderItemEntity>()
+                    .eq("order_sn", order.getOrderSn()));
+            order.setOrderItemEntityList(orderItemEntities);
+            return order;
+        }).collect(Collectors.toList());
+
+        page.setRecords(orderEntityList);
+
+        return new PageUtils(page);
+    }
+
+    /**
+     * 处理支付宝的支付结果
+     * @param vo
+     * @return
+     */
+    @Override
+    public String handlePayResult(PayAsyncVO vo) {
+        String tradeStatus = vo.getTrade_status();
+        String orderSn = vo.getOut_trade_no();
+
+        PaymentInfoEntity paymentInfo = new PaymentInfoEntity();
+        paymentInfo.setAlipayTradeNo(vo.getTrade_no());
+        paymentInfo.setOrderSn(orderSn);
+        paymentInfo.setPaymentStatus(tradeStatus);
+        paymentInfo.setCallbackTime(vo.getNotify_time());
+        paymentInfoService.save(paymentInfo);
+
+        // 2、修改订单的状态信息
+        if (tradeStatus.equals("TRADE_SUCCESS") || tradeStatus.equals("TRADE_FINISHED")) {
+            // 支付成功
+            this.baseMapper.updateOrderStatus(orderSn, OrderStatusConstant.OrderStatusEnum.PAYED.getCode());
+        }
+        return null;
     }
 }

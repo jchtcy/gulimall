@@ -11,13 +11,13 @@ import java.util.HashMap;
 @Configuration
 public class MyRabbitMQConfig {
 
-    /**
-     * JSON序列化机制, 进行消息转换
-     */
-    @Bean
-    public MessageConverter messageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
+//    /**
+//     * JSON序列化机制, 进行消息转换
+//     */
+//    @Bean
+//    public MessageConverter messageConverter() {
+//        return new Jackson2JsonMessageConverter();
+//    }
 
 //    @RabbitListener(queues = "stock.release.stock.queque")
 //    public void handle(Message message) {
@@ -51,7 +51,7 @@ public class MyRabbitMQConfig {
         HashMap<String, Object> arguments = new HashMap<>();
         arguments.put("x-dead-letter-exchange", "stock-event-exchange");
         arguments.put("x-dead-letter-routing-key", "stock.release");
-        arguments.put("x-message-ttl", 2 * 60 * 1000);
+        arguments.put("x-message-ttl", 30 * 60 * 1000);
 
         return new Queue("stock.delay.queque", true, false, false, arguments);
     }

@@ -29,6 +29,7 @@ public class OrderCloseListener {
         System.out.println("收到过期的订单信息, 准备关闭订单" + orderEntity.getOrderSn());
         try {
             orderService.closeOrder(orderEntity);
+
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {
             channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
