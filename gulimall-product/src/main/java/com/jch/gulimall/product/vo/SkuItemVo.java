@@ -1,5 +1,6 @@
 package com.jch.gulimall.product.vo;
 
+import com.jch.common.to.seckill.SeckillSkuRedisTo;
 import com.jch.gulimall.product.entity.SkuImagesEntity;
 import com.jch.gulimall.product.entity.SkuInfoEntity;
 import com.jch.gulimall.product.entity.SpuInfoDescEntity;
@@ -24,7 +25,7 @@ public class SkuItemVo {
 
     private boolean hasStock = true;// 是否有货
     // 6、秒杀
-    private String seckillSku;
+    private SeckillSkuRedisTo seckillSku;
 
     @Data
     public static class SkuItemSaleAttrVo{

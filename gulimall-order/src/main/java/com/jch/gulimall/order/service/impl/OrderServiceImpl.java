@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.jch.common.constant.order.OrderConstant;
 import com.jch.common.exception.NoStockException;
 import com.jch.common.to.mq.OrderTo;
+import com.jch.common.to.mq.SeckillOrderTo;
 import com.jch.common.utils.R;
 import com.jch.common.vo.auth.MemberResponseVO;
 import com.jch.common.vo.order.PayAsyncVO;
@@ -23,6 +24,7 @@ import com.jch.gulimall.order.vo.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -493,5 +495,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             this.baseMapper.updateOrderStatus(orderSn, OrderStatusConstant.OrderStatusEnum.PAYED.getCode());
         }
         return null;
+    }
+
+    /**
+     * 创建秒杀单
+     * @param seckillOrderTo
+     */
+    @Transactional
+    @Override
+    public void createSeckillOrder(SeckillOrderTo seckillOrderTo) {
+        // 保存订单信息
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        orderEntity.setMemberId(seckillOrderTo.getMemberId());
+        orderEntity.setStatus(OrderStatusConstant.OrderStatusEnum.CREATE_NEW.getCode());
+        BigDecimal multiply = seckillOrderTo.getSeckillPrice().multiply(new BigDecimal("" + seckillOrderTo.getNum()));
+        orderEntity.setPayAmount(multiply);
+        this.save(orderEntity);
+
+        // 保存订单项信息
+        OrderItemEntity orderItemEntity = new OrderItemEntity();
+        orderItemEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        orderItemEntity.setRealAmount(multiply);
+        orderItemService.save(orderItemEntity);
     }
 }

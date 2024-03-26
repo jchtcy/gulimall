@@ -15,6 +15,7 @@ public class MyRabbitMQConfig {
 
     /**
      * 延时队列
+     *
      * @return
      */
     @Bean
@@ -31,6 +32,7 @@ public class MyRabbitMQConfig {
 
     /**
      * 死信队列
+     *
      * @return
      */
     @Bean
@@ -42,6 +44,7 @@ public class MyRabbitMQConfig {
 
     /**
      * order 服务的交换机
+     *
      * @return
      */
     @Bean
@@ -51,6 +54,7 @@ public class MyRabbitMQConfig {
 
     /**
      * 绑定交换机和延时队列
+     *
      * @return
      */
     @Bean
@@ -61,6 +65,7 @@ public class MyRabbitMQConfig {
 
     /**
      * 绑定交换机和死信队列
+     *
      * @return
      */
     @Bean
@@ -71,11 +76,36 @@ public class MyRabbitMQConfig {
 
     /**
      * 绑定订单交换机和库存死信队列
+     *
      * @return
      */
     @Bean
     public Binding orderReleaseOtherBinding() {
         return new Binding("stock.release.stock.queue", Binding.DestinationType.QUEUE,
                 "order-event-exchange", "order.release.other.#", null);
+    }
+
+    /**
+     * 秒杀队列
+     *
+     * @return
+     */
+    @Bean
+    public Queue orderSeckillOrderQueue() {
+        return new Queue("order.seckill.order.queue", true, false, false);
+    }
+
+    /**
+     * 绑定订单交换机和秒杀队列
+     */
+    @Bean
+    public Binding orderSeckillOrderQueueBinding() {
+
+        return new Binding("order.seckill.order.queue",
+                Binding.DestinationType.QUEUE,
+                "order-event-exchange",
+                "order.seckill.order",
+                null
+        );
     }
 }

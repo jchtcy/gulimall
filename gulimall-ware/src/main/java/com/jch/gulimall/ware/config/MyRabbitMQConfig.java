@@ -39,7 +39,7 @@ public class MyRabbitMQConfig {
      */
     @Bean
     public Queue stockReleaseStockQueue() {
-        return new Queue("stock.release.stock.queque", true, false, false);
+        return new Queue("stock.release.stock.queue", true, false, false);
     }
 
     /**

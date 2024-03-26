@@ -1,6 +1,7 @@
 package com.jch.gulimall.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jch.common.to.mq.SeckillOrderTo;
 import com.jch.common.utils.PageUtils;
 import com.jch.common.vo.order.PayAsyncVO;
 import com.jch.common.vo.order.PayVO;
@@ -70,5 +71,10 @@ public interface OrderService extends IService<OrderEntity> {
      */
     String handlePayResult(PayAsyncVO vo);
 
+    /**
+     * 创建秒杀单
+     * @param seckillOrderTo
+     */
+    void createSeckillOrder(SeckillOrderTo seckillOrderTo);
 }
 
