@@ -19,7 +19,7 @@ public class MyRabbitMQConfig {
 //        return new Jackson2JsonMessageConverter();
 //    }
 
-//    @RabbitListener(queues = "stock.release.stock.queque")
+//    @RabbitListener(queues = "stock.release.stock.queue")
 //    public void handle(Message message) {
 //
 //    }
@@ -53,7 +53,7 @@ public class MyRabbitMQConfig {
         arguments.put("x-dead-letter-routing-key", "stock.release");
         arguments.put("x-message-ttl", 30 * 60 * 1000);
 
-        return new Queue("stock.delay.queque", true, false, false, arguments);
+        return new Queue("stock.delay.queue", true, false, false, arguments);
     }
 
     /**
@@ -62,7 +62,7 @@ public class MyRabbitMQConfig {
      */
     @Bean
     public Binding stockRealeaseBinding() {
-        return new Binding("stock.release.stock.queque", Binding.DestinationType.QUEUE,
+        return new Binding("stock.release.stock.queue", Binding.DestinationType.QUEUE,
                 "stock-event-exchange", "stock.release.#", null);
     }
 
@@ -72,7 +72,7 @@ public class MyRabbitMQConfig {
      */
     @Bean
     public Binding stockLockedBinding() {
-        return new Binding("stock.delay.queque", Binding.DestinationType.QUEUE,
+        return new Binding("stock.delay.queue", Binding.DestinationType.QUEUE,
                 "stock-event-exchange", "stock.locked", null);
     }
 }

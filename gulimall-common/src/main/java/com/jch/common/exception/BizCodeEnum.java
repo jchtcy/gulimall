@@ -23,7 +23,8 @@ public enum BizCodeEnum {
     USER_EXIST_EXCEPTION(15001, "用户存在"),
     EMAIL_EXIST_EXCEPTION(15002, "邮箱存在"),
     LOGINACCT_PASWORD_EXCEPTION(15002, "账号密码错误"),
-    NO_STOCK_EXCEPTION(21000, "商品库存不足");
+    NO_STOCK_EXCEPTION(21000, "商品库存不足"),
+    SMS_CODE_EXCEPTION(10005, "请求次数过多, 请勿重复请求");
 
 
     private int code;

@@ -50,11 +50,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-        <!--审计模块，监控应用的健康情况、调用信息-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
         <!--模板引擎热启动-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

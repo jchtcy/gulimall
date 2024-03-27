@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Slf4j
 @Service
-@RabbitListener(queues = "stock.release.stock.queque")
+@RabbitListener(queues = "stock.release.stock.queue")
 public class StockReleaseListener {
 
     @Autowired
