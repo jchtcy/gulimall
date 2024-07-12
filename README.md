@@ -39,11 +39,6 @@ gulimall
 |  Element  | 前端UI框架 | https://element.eleme.io  |
 | thymeleaf |  模板引擎  | https://www.thymeleaf.org |
 |  node.js  | 服务端的js |   https://nodejs.org/en   |
-# 四、架构图
-## 1、系统架构图
-![本地路径](resource/img/note/系统架构图.PNG)
-## 2、业务架构图
-![本地路径](resource/img/note/业务架构图.PNG)
 # 五、环境搭建
 ## 1、开发工具
 |     工具      |        说明         |                      官网                       |
@@ -67,54 +62,3 @@ gulimall
 |    Kibana     | 7.6.2  |               https://www.elastic.co/cn/kibana               |
 |   RabbitMQ    | 3.8.5  |            http://www.rabbitmq.com/download.html             |
 |     Nginx     | 1.1.6  |              http://nginx.org/en/download.html               |
-注意：以上的除了jdk都是采用docker方式进行安装，详细安装步骤可参考百度!!!
-## 3、搭建步骤
-> Windows环境部署
-- 修改本机的host文件，映射域名端口
-```
-192.168.77.130	gulimall.com
-192.168.77.130	search.gulimall.com
-192.168.77.130  item.gulimall.com
-192.168.77.130  auth.gulimall.com
-192.168.77.130  cart.gulimall.com
-192.168.77.130  order.gulimall.com
-192.168.77.130  member.gulimall.com
-192.168.77.130  seckill.gulimall.com
-以上端口换成自己Linux的ip地址
-```
-
-- 修改Linux中Nginx的配置文件
-```
-1、在nginx.conf中添加负载均衡的配置    
-upstream gulimall {
-        server 192.168.48.129:88;
-    }
-2、在gulimall.conf中添加如下配置
-server {
-    listen       80;
-    server_name  gulimall.com  *.gulimall.com hjl.mynatapp.cc;
-
-    #charset koi8-r;
-    #access_log  /var/log/nginx/log/host.access.log  main;
-
-    #配置静态资源的动态分离
-    location /static/ {
-        root   /usr/share/nginx/html;
-    }
-
-    #支付异步回调的一个配置
-    location /payed/ {
-        proxy_set_header Host order.gulimall.com;        #不让请求头丢失
-        proxy_pass http://gulimall;
-    }
-
-    location / {
-        #root   /usr/share/nginx/html;
-        #index  index.html index.htm;
-        proxy_set_header Host $host;        #不让请求头丢失
-        proxy_pass http://gulimall;
-    }
-```
-
-- 克隆前端项目 `renren-fast-vue` 以 `npm run dev` 方式去运行
-- 克隆整个后端项目 `gulimall` ，并导入 IDEA 中完成编译
